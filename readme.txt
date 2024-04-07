@@ -1,4 +1,4 @@
- 1PXCT simulation
+PXCT simulation
 
 Location on fishtank:
 cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
@@ -17,7 +17,7 @@ cdp
 cd /home/sun/app/PXCT-build
 
 1) cmp
-cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/PXCT
+cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/HPGE_PXCT
 
 2) make
 
