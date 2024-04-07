@@ -1,0 +1,3 @@
+cmake -DGeant4_DIR=/mnt/simulations/proton_detector/Geant4/geant4.10.2-install/lib/Geant4-10.2.2 ./..
+make clean
+make

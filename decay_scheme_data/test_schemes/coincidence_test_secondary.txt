@@ -1,0 +1,7 @@
+#electron capture in Zinc60 ground state
+#about ???% of these should emmit a ??? keV xray, which should be detected with about ???% efficiency
+#so about ???% of false coincidences should show an xray in this peak.
+
+ELECTRON_CAPTURE
+#initial isotope name, initial isotope energy, final isotope name, final energy, partial lifetime in second, e- frac 1, e- frac 2, ...
+60ZN, 0, 60CU, 0, 120, 1

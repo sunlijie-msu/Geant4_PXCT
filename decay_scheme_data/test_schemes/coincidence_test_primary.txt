@@ -1,0 +1,8 @@
+#decay scheme that just emmits monoenergetic protons
+#BETA_PLUS or PROTON or ALPHA
+#  initial isotope name, initial isotope energy, final isotope name, final isotope energy, partial lifetime in seconds
+BETA_PLUS
+60GA, 0, 60ZN, 6105, 0.07 #beta decay to 1 MeV above proton seperation energy
+
+PROTON
+60ZN, 6105, 59CU, 0, 1e-14 #emmit ~1 MeV proton 
