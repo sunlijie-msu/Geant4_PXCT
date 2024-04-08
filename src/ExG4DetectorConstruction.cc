@@ -6,7 +6,9 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
-
+#include "G4SubtractionSolid.hh"
+#include "G4UnionSolid.hh"
+#include "G4IntersectionSolid.hh"
 #include "G4SDManager.hh"
 #include "G4VSensitiveDetector.hh"
 #include "G4ios.hh"
@@ -52,11 +54,12 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   logicMSD12 = addCylinder("MSD12", 0*mm, MSD12_Radius, MSD12_Thickness/2,silicon, MSD12_Center_Position, 0, G4Color::Grey()); //DE active area
   addCylinder("MSD12_Chip", MSD12_Radius, 8*mm, 0.140*mm/2, silicon, MSD12_Center_Position, 0, G4Color::Green());
   addCylinder("MSD12_Frame", 8*mm, 15*mm, 3.472*mm/2, FR4, MSD12_Center_Position, 0, G4Color::Red());
+  addCylinder("MSD12_Holder", 15.05*mm, 21.6*mm, 6.3 /2*mm, PEEK, MSD12_Center_Position, 0, G4Color(0.0, 1.0, 1.0,0.5));
   addCylinder("MSD12_Window_Front", 0*mm, MSD12_Radius, MSD12_Front_Window_Thickness/2, silicon,
-	      MSD12_Center_Position - G4ThreeVector(0,0, MSD12_Thickness + MSD12_Front_Window_Thickness/2),
+	      MSD12_Center_Position - G4ThreeVector(0,0, MSD12_Thickness/2 + MSD12_Front_Window_Thickness/2),
 	      0, G4Color::Grey());
   addCylinder("MSD12_Window_Back", 0*mm, MSD12_Radius, MSD12_Back_Window_Thickness/2, silicon,
-	      MSD12_Center_Position + G4ThreeVector(0,0, MSD12_Thickness + MSD12_Back_Window_Thickness /2),
+	      MSD12_Center_Position + G4ThreeVector(0,0, MSD12_Thickness/2 + MSD12_Back_Window_Thickness /2),
 	      0, G4Color::Grey());
   
   //MSD26 (E)
@@ -67,11 +70,17 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double MSD26_Back_Window_Thickness = 0.000800 * mm;//window thickness 0.3 um Al + 0.5 um Si. Treat as 0.8 um Si
   logicMSD26 = addCylinder("MSD26", 0*mm, MSD26_Radius, MSD26_Thickness/2, silicon, MSD26_Center_Position, 0, G4Color::Grey());
   addCylinder("MSD26_Chip", 13*mm, 15*mm, MSD26_Thickness/2, silicon, MSD26_Center_Position, 0, G4Color::Green());
-  addCylinder("MSD26_Frame", 15*mm, 21.6*mm, 3.2/2*mm, FR4, MSD26_Center_Position, 0, G4Color::Red());
+  addCylinder("MSD26_Frame", 15*mm, 21.6*mm, 3.2/2*mm, FR4, MSD26_Center_Position, 0, G4Color::Blue());
+  addCylinder("MSD26_Holder", 15 * mm, 21.6 * mm, 1.58 / 2 * mm, PEEK, MSD26_Center_Position + G4ThreeVector(0, 0, 3.2 / 2 * mm + 1.587 / 2 * mm), 0, G4Color(0.0, 1.0, 1.0, 0.5));
   addCylinder("MSD26_Window_Front", 0*mm, MSD26_Radius, MSD26_Front_Window_Thickness/2, silicon,
 	      MSD26_Center_Position - G4ThreeVector(0,0,MSD26_Thickness/2 + MSD26_Front_Window_Thickness/2), 0, G4Color::Grey());
   addCylinder("MSD26_Window_Back", 0*mm, MSD26_Radius, MSD26_Back_Window_Thickness/2, silicon,
 	      MSD26_Center_Position + G4ThreeVector(0,0,MSD26_Thickness/2 + MSD26_Back_Window_Thickness/2), 0, G4Color::Grey());
+  addCylinder("MSD_Support_Rod1", 0*mm, 3.175*mm, 117/2*mm, PEEK, MSD26_Center_Position + G4ThreeVector(12.763 * mm, 12.763 * mm, 3.2 / 2 * mm + 1.587 * mm + 117 / 2 * mm), 0, G4Color(0.0, 1.0, 1.0, 0.5));
+  addCylinder("MSD_Support_Rod2", 0*mm, 3.175*mm, 117/2*mm, PEEK, MSD26_Center_Position + G4ThreeVector(-12.763 * mm, 12.763 * mm, 3.2 / 2 * mm + 1.587 * mm + 117 / 2 * mm), 0, G4Color(0.0, 1.0, 1.0, 0.5));
+  addCylinder("MSD_Support_Rod3", 0*mm, 3.175*mm, 117/2*mm, PEEK, MSD26_Center_Position + G4ThreeVector(12.763 * mm, -12.763 * mm, 3.2 / 2 * mm + 1.587 * mm + 117 / 2 * mm), 0, G4Color(0.0, 1.0, 1.0, 0.5));
+  addCylinder("MSD_Support_Rod4", 0*mm, 3.175*mm, 117/2*mm, PEEK, MSD26_Center_Position + G4ThreeVector(-12.763 * mm, -12.763 * mm, 3.2 / 2 * mm + 1.587 * mm + 117 / 2 * mm), 0, G4Color(0.0, 1.0, 1.0, 0.5));
+
 
   //LEGe (X-ray detector). Currently configured for GL0510
   G4ThreeVector LEGe_Center_Position(0, 0, -21.82 * mm); // 10.97+5.6+10.5/2=21.82
@@ -81,9 +90,10 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double LEGE_EndCap_Window_Radius = 18.9*mm;
   G4double LEGe_EndCap_Window_Thickness = 0.13*mm;
   G4double LEGe_To_Window_Distance = 5.6*mm;//distance to active region
-  logicLEGe = addCylinder("LEGe", 0*mm, LEGe_Radius, LEGe_Thickness/2, germanium, LEGe_Center_Position, 0, G4Color::Yellow());
-  addCylinder("LEGe_Dead_Layer", 0*mm, LEGe_Radius, LEGe_Dead_Layer_Thickness/2, germanium, LEGe_Center_Position + G4ThreeVector(0, 0, LEGe_Thickness / 2 + LEGe_Dead_Layer_Thickness / 2), 0, G4Color(255,0,0,0.5));
-  addCylinder("LEGE_EndCap_Window", 0*mm, LEGE_EndCap_Window_Radius, LEGe_EndCap_Window_Thickness/2, beryllium, LEGe_Center_Position + G4ThreeVector(0, 0, LEGe_Thickness / 2 + LEGe_To_Window_Distance), 0, G4Color(255, 100, 100, 0.5));
+  logicLEGe = addCylinder("LEGe", 0*mm, LEGe_Radius, LEGe_Thickness/2, germanium, LEGe_Center_Position, 0, G4Color::Green());
+  addCylinder("LEGe_Dead_Layer", 0*mm, LEGe_Radius, LEGe_Dead_Layer_Thickness/2, germanium, LEGe_Center_Position + G4ThreeVector(0, 0, LEGe_Thickness / 2 + LEGe_Dead_Layer_Thickness / 2), 0, G4Color::Green());
+  addCylinder("LEGE_EndCap_Window", 0*mm, LEGE_EndCap_Window_Radius, LEGe_EndCap_Window_Thickness/2, beryllium, LEGe_Center_Position + G4ThreeVector(0, 0, LEGe_Thickness / 2 + LEGe_To_Window_Distance), 0, G4Color(0.5, 0.5, 0.5, 0.5));
+  addCylinder("LEGE_Housing", LEGE_EndCap_Window_Radius, LEGE_EndCap_Window_Radius+1*mm, 28 * mm, aluminum, LEGe_Center_Position + G4ThreeVector(0, 0, LEGe_Thickness / 2 + LEGe_To_Window_Distance-28.1*mm), 0, G4Color(0.5, 0.5, 0.5, 0.5));
   
   //South (gamma-ray detector)
   G4ThreeVector South_Center_Position(0, 0, 191.7 * mm); // 139.7+12+80.0/2=191.7
@@ -93,9 +103,10 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double South_EndCap_Window_Radius = 50.8 * mm;
   G4double South_EndCap_Window_Thickness = 0.6 * mm;
   G4double South_To_Window_Distance = 6.3 * mm;//distance to active region
-  logicSouth = addCylinder("South", 0 * mm, South_Radius, South_Thickness / 2, germanium, South_Center_Position, 0, G4Color::Yellow());
-  addCylinder("South_Dead_Layer", 0 * mm, South_Radius, South_Dead_Layer_Thickness / 2, germanium, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_Dead_Layer_Thickness / 2), 0, G4Color(255, 0, 0, 0.5));
-  addCylinder("South_EndCap_Window", 0 * mm, South_EndCap_Window_Radius, South_EndCap_Window_Thickness / 2, carbon, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_To_Window_Distance), 0, G4Color(255, 100, 100, 0.5));
+  logicSouth = addCylinder("South", 0 * mm, South_Radius, South_Thickness / 2, germanium, South_Center_Position, 0, G4Color::Blue());
+  addCylinder("South_Dead_Layer", 0 * mm, South_Radius, South_Dead_Layer_Thickness / 2, germanium, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_Dead_Layer_Thickness / 2), 0, G4Color::Blue());
+  addCylinder("South_EndCap_Window", 0 * mm, South_EndCap_Window_Radius, South_EndCap_Window_Thickness / 2, carbon, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_To_Window_Distance), 0, G4Color(0.5, 0.5, 0.5, 0.5));
+  addCylinder("South_Housing", South_EndCap_Window_Radius, South_EndCap_Window_Radius + 1 * mm, South_Thickness / 2 + South_To_Window_Distance, aluminum, South_Center_Position, 0, G4Color(0.5, 0.5, 0.5, 0.5));
 
   //North (gamma-ray detector)
   G4RotationMatrix* Northrot = new G4RotationMatrix;
@@ -108,9 +119,10 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double North_EndCap_Window_Radius = 50.8 * mm;
   G4double North_EndCap_Window_Thickness = 0.6 * mm;
   G4double North_To_Window_Distance = 6.8 * mm; //distance to active region
-  logicNorth = addCylinder("North", 0 * mm, North_Radius, North_Thickness / 2, germanium, North_Center_Position, Northrot, G4Color::Yellow());
-  addCylinder("North_Dead_Layer", 0 * mm, North_Radius, North_Dead_Layer_Thickness / 2, germanium, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_Dead_Layer_Thickness / 2,0,0), Northrot, G4Color(255, 0, 0, 0.5));
-  addCylinder("North_EndCap_Window", 0 * mm, North_EndCap_Window_Radius, North_EndCap_Window_Thickness / 2, carbon, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_To_Window_Distance,0,0), Northrot, G4Color(255, 100, 100, 0.5));
+  logicNorth = addCylinder("North", 0 * mm, North_Radius, North_Thickness / 2, germanium, North_Center_Position, Northrot, G4Color::Red());
+  addCylinder("North_Dead_Layer", 0 * mm, North_Radius, North_Dead_Layer_Thickness / 2, germanium, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_Dead_Layer_Thickness / 2,0,0), Northrot, G4Color::Red());
+  addCylinder("North_EndCap_Window", 0 * mm, North_EndCap_Window_Radius, North_EndCap_Window_Thickness / 2, carbon, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_To_Window_Distance,0,0), Northrot, G4Color(0.5, 0.5, 0.5, 0.5));
+  addCylinder("North_Housing", North_EndCap_Window_Radius, North_EndCap_Window_Radius + 1 * mm, North_Thickness / 2 + North_To_Window_Distance, aluminum, North_Center_Position, Northrot, G4Color(0.5, 0.5, 0.5, 0.5));
 
   //  target
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
@@ -119,11 +131,49 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White());
 
   //Chamber
-  G4RotationMatrix* Rot = new G4RotationMatrix; // Rotates X and Z axes only
-  Rot -> rotateX(M_PI/2.*rad); // Rotates 90 degrees
-  addCylinder("chamber", 146.3/2*mm, 152.4/2*mm, 168/2*mm, stainless_steel, G4ThreeVector(0,0,0), Rot, G4Color(0.5,0.5,0.5,0.25));
+//   G4RotationMatrix* Rot = new G4RotationMatrix; // Rotates X and Z axes only
+//   Rot -> rotateX(M_PI/2.*rad); // Rotates 90 degrees
+//   addCylinder("chamber", 146.3/2*mm, 152.4/2*mm, 168/2*mm, stainless_steel, G4ThreeVector(0,0,0), Rot, G4Color(0.5,0.5,0.5,0.25));
 
+  G4RotationMatrix* RotX90 = new G4RotationMatrix;
+  RotX90->rotateX(M_PI / 2. * rad); // Rotates 90 degrees
+  G4RotationMatrix* RotY90 = new G4RotationMatrix;
+  RotY90->rotateY(M_PI / 2. * rad); // Rotates 90 degrees
 
+  G4VSolid* solidChamber_Full
+	  = new G4Tubs("solidChamber_Full", 146.3 / 2. * mm, 152.40 / 2. * mm, 209.55 / 2. * mm, 0. * deg, 360. * deg); //Chamber
+  G4VSolid* solidChamber_Hole_South
+	  = new G4Tubs("solidChamber_Hole_South", 0. * mm, 76.2 / 2. * mm, 50 / 2. * mm, 0. * deg, 360. * deg);
+  G4VSolid* solidChamber_Hole_North
+	  = new G4Tubs("solidChamber_Hole_North", 0. * mm, 76.2 / 2. * mm, 50 / 2. * mm, 0. * deg, 360. * deg);
+  G4SubtractionSolid* solidChamber_Cut_South_Hole
+	  = new G4SubtractionSolid("solidChamber_Cut_South_Hole", solidChamber_Full, solidChamber_Hole_South, RotX90, G4ThreeVector(0, -75, 0 * mm));
+  G4SubtractionSolid* solidChamber_Cut_South_and_North_Holes
+	  = new G4SubtractionSolid("solidChamber_Cut_South_and_North_Holes", solidChamber_Cut_South_Hole, solidChamber_Hole_North, RotY90, G4ThreeVector(-75, 0, 0 * mm));
+
+  logicChamber
+	  = new G4LogicalVolume(solidChamber_Cut_South_and_North_Holes, stainless_steel, "logicChamber");
+  physiChamber
+	  = new G4PVPlacement(RotX90, G4ThreeVector(0, 0, 0 * mm), logicChamber, "physiChamber", logicWorld, false, 0, checkOverlaps);
+
+  DetectorVisAtt = new G4VisAttributes(G4Colour(1.0, 1.0, 0.0, 0.3));
+  //DetectorVisAtt->SetForceWireframe(true); //optional
+  //DetectorVisAtt->SetVisibility(false); //optional
+  logicChamber->SetVisAttributes(DetectorVisAtt); //Chamber
+
+  G4ThreeVector South_Flange_Center_Position(0, 0, 137.9 * mm);
+  G4double South_Flange_Thickness = 3.175 * mm;
+  G4double South_Flange_Radius = 58.674 * mm;
+  logicSouth_Flange = addCylinder("South_Flange", 0 * mm, South_Flange_Radius, South_Flange_Thickness / 2, stainless_steel, South_Flange_Center_Position, 0, G4Color(1.0, 1.0, 0.0, 0.3));
+  addCylinder("South_Flange_Thick", 76.2/2. * mm, 58.674 * mm, 33 / 2. * mm, stainless_steel, South_Flange_Center_Position - G4ThreeVector(0, 0, South_Flange_Thickness / 2 + 33 / 2. * mm), 0, G4Color(1.0, 1.0, 0.0, 0.3));
+  addCylinder("South_Flange_Tube", 72.898 /2. * mm, 76.2 / 2. * mm, 39 / 2. * mm, stainless_steel, South_Flange_Center_Position - G4ThreeVector(0, 0, South_Flange_Thickness / 2 + 39 / 2. * mm + 33 * mm), 0, G4Color(1.0, 1.0, 0.0, 0.3));
+
+  G4ThreeVector North_Flange_Center_Position(-137.9 * mm, 0, 0);
+  G4double North_Flange_Thickness = 3.175 * mm;
+  G4double North_Flange_Radius = 58.674 * mm;
+  logicNorth_Flange = addCylinder("North_Flange", 0 * mm, North_Flange_Radius, North_Flange_Thickness / 2, stainless_steel, North_Flange_Center_Position, RotY90, G4Color(1.0, 1.0, 0.0, 0.3));
+  addCylinder("North_Flange_Thick", 76.2 / 2. * mm, 58.674 * mm, 33 / 2. * mm, stainless_steel, North_Flange_Center_Position + G4ThreeVector(North_Flange_Thickness / 2 + 33 / 2. * mm,0,0), RotY90, G4Color(1.0, 1.0, 0.0, 0.3));
+  addCylinder("North_Flange_Tube", 72.898 / 2. * mm, 76.2 / 2. * mm, 39 / 2. * mm, stainless_steel, North_Flange_Center_Position + G4ThreeVector(North_Flange_Thickness / 2 + 39 / 2. * mm + 33 * mm,0,0), RotY90, G4Color(1.0, 1.0, 0.0, 0.3));
 
   // visualization attributes ------------------------------------------------
   /*DetectorVisAtt = new G4VisAttributes(G4Colour::Red());

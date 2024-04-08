@@ -65,16 +65,27 @@ private:
   G4VPhysicalVolume* physiMSD26_Frame;
   G4VPhysicalVolume* physiMSD26_Window_Front;
   G4VPhysicalVolume* physiMSD26_Window_Back;
+  G4VPhysicalVolume* physiMSD12_Holder;
+  G4VPhysicalVolume* physiMSD26_Holder;
+  G4VPhysicalVolume* physiMSD_Support_Rod1;
+  G4VPhysicalVolume* physiMSD_Support_Rod2;
+  G4VPhysicalVolume* physiMSD_Support_Rod3;
+  G4VPhysicalVolume* physiMSD_Support_Rod4;
   G4VPhysicalVolume* physiLEGe;
   G4VPhysicalVolume* physiNorth;
   G4VPhysicalVolume* physiSouth;
   G4VPhysicalVolume* physiChamber;
+  G4VPhysicalVolume* physiNorth_Flange;
+  G4VPhysicalVolume* physiSouth_Flange;
 
   G4LogicalVolume* logicMSD12;
   G4LogicalVolume* logicMSD26;
   G4LogicalVolume* logicLEGe;
   G4LogicalVolume* logicNorth;
   G4LogicalVolume* logicSouth;
+  G4LogicalVolume* logicChamber;
+  G4LogicalVolume* logicNorth_Flange;
+  G4LogicalVolume* logicSouth_Flange;
 
   //Materials
   G4Element* O;
