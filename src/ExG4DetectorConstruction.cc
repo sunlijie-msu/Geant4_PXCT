@@ -127,7 +127,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   //  target
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
   Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 90 degrees
-  G4double target_thickness = 0.000001*mm;
+  G4double target_thickness = 0.01*mm;
   addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White());
 
   //Chamber

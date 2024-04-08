@@ -39,7 +39,11 @@ ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 	// 	xygaus->SetParameters(1,0,3,0,3); // amplitude, mean_x, sigma_x, mean_y, sigma_y  in units of mm. // 2D Gaussian beam spot
 	// 	xygaus->SetNpx(200);  // 2D Gaussian beam spot
 	// 	xygaus->SetNpy(200);  // 2D Gaussian beam spot
-	Rmax = 1.0 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm)
+	Rmax = 1 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm)
+	tiltAngle = 45. * CLHEP::deg; // Tilt angle of 45 degrees
+	cosAngle = cos(tiltAngle);
+	sinAngle = sin(tiltAngle);
+	//G4cout << "++++++++++++  cosAngle=" << cosAngle << "  sinAngle=" << sinAngle << G4endl;
 
 	//pFile = new TFile("depth.root", "read"); // put the depth.root file under the build directory
 	//pFile=new TFile("/mnt/hgfs/HPGe/P26_pz.root","read");
@@ -102,7 +106,7 @@ ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 ExG4PrimaryGeneratorAction::~ExG4PrimaryGeneratorAction()
 {
 	G4cout << "8$ after run, by run, ExG4PrimaryGeneratorAction::~ExG4PrimaryGeneratorAction()" << G4endl;
-	pFile->Close();
+	//pFile->Close();
 	//fclose(fout);
 	//	fclose(fin);//VMware
 	delete fParticleGun;
@@ -121,6 +125,18 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	//z0 = depth_3He->GetRandom() * CLHEP::nm;//Return a random number distributed according the histogram depth_3He
 	z0=0*CLHEP::um;
 	//G4cout<<"++++++++++++  x0="<<x0/CLHEP::mm<<"  y0="<<y0/CLHEP::mm<<"  z0="<<z0/CLHEP::nm<<G4endl;
+
+	// Apply rotation around the Y-axis
+	double x0_tilted = x0 * cosAngle + z0 * sinAngle;
+	double y0_tilted = y0; // y-coordinate remains unchanged
+	double z0_tilted = -x0 * sinAngle + z0 * cosAngle;
+
+	// Update x0, y0, z0 with the tilted coordinates
+	x0 = x0_tilted;
+	y0 = y0_tilted;
+	z0 = z0_tilted;
+
+	// Now x0, y0, z0 are the coordinates of the source distribution tilted by 45 degrees
 
 	int AngularDistribution = 0;
 	if (AngularDistribution == 1) // slower than AD = 0
@@ -146,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 1.0 * CLHEP::MeV; // energy of the ejectile
+	Eejectile = 0.245 * CLHEP::MeV; // energy of the ejectile
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified
@@ -156,7 +172,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	position = G4ThreeVector(x0 * CLHEP::mm, y0 * CLHEP::mm, z0 * CLHEP::mm);// 2D beam spot
 	//position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0*CLHEP::mm);// point source, usually for check, validation and test
 	momentumDirection = G4ThreeVector(dirx, diry, dirz);//isotropy
-	//momentumDirection = G4ThreeVector(0,0,-1);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
+	//momentumDirection = G4ThreeVector(-1,0,0);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
 	fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("gamma"));
 	fParticleGun->SetParticleEnergy(Eejectile);
 	fParticleGun->SetParticlePosition(position);

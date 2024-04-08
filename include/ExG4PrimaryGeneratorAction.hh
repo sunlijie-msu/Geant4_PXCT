@@ -69,6 +69,7 @@ private:
 	TF2* xygaus; // 2D Gaussian beam spot
 	TF1* ad;
 	double theta_beam, r_beam, Rmax; // 2D Uniform beam spot
+	double tiltAngle, cosAngle, sinAngle;
 	double x0, y0, z0; // 2D beam spot	
 	double Eg_lit[100];
 	double branch_lit[100];
