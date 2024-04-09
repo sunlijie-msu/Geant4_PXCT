@@ -46,7 +46,7 @@ int main(int argc,char** argv)
   //===================================BeamOn==================================//
   if(argc==1) {
     for(int runid=0;runid<1;runid++) {
-      runManager->BeamOn(1000000);//
+      runManager->BeamOn(100000);//
     }
   } else {
     G4String fileName=argv[1];

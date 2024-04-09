@@ -49,7 +49,7 @@ public:
 		   G4Color color);
 
 private:
-  const G4bool checkOverlaps = true;
+  const G4bool checkOverlaps = false;
   
   G4VSolid* solidWorld;
   G4LogicalVolume* logicWorld;

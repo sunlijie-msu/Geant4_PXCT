@@ -103,7 +103,18 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double South_EndCap_Window_Radius = 50.8 * mm;
   G4double South_EndCap_Window_Thickness = 0.6 * mm;
   G4double South_To_Window_Distance = 6.3 * mm;//distance to active region
-  logicSouth = addCylinder("South", 0 * mm, South_Radius, South_Thickness / 2, germanium, South_Center_Position, 0, G4Color::Blue());
+  G4VSolid* solidSouth_Full
+	  = new G4Tubs("solidSouth_Full", 0 * mm, South_Radius, South_Thickness / 2, 0. * deg, 360. * deg);
+  G4VSolid* solidSouth_Hole
+	  = new G4Tubs("solidSouth_Hole", 0. * mm, 15. / 2. * mm, South_Thickness / 2, 0. * deg, 360. * deg);
+  G4SubtractionSolid* solidSouth
+	  = new G4SubtractionSolid("solidSouth", solidSouth_Full, solidSouth_Hole, 0, G4ThreeVector(0, 0, 20 * mm));
+  //logicSouth = addCylinder("South", 0 * mm, South_Radius, South_Thickness / 2, germanium, South_Center_Position, 0, G4Color::Blue());
+  logicSouth
+	  = new G4LogicalVolume(solidSouth, germanium, "logicSouth");
+  physiSouth
+	  = new G4PVPlacement(0, South_Center_Position, logicSouth, "physiSouth", logicWorld, false, 0, checkOverlaps);
+  logicSouth->SetVisAttributes(G4Color(0.0, 0.2, 1.0, 1.0));
   addCylinder("South_Dead_Layer", 0 * mm, South_Radius, South_Dead_Layer_Thickness / 2, germanium, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_Dead_Layer_Thickness / 2), 0, G4Color::Blue());
   addCylinder("South_EndCap_Window", 0 * mm, South_EndCap_Window_Radius, South_EndCap_Window_Thickness / 2, carbon, South_Center_Position - G4ThreeVector(0, 0, South_Thickness / 2 + South_To_Window_Distance), 0, G4Color(0.5, 0.5, 0.5, 0.5));
   addCylinder("South_Housing", South_EndCap_Window_Radius, South_EndCap_Window_Radius + 1 * mm, South_Thickness / 2 + South_To_Window_Distance, aluminum, South_Center_Position, 0, G4Color(0.5, 0.5, 0.5, 0.5));
@@ -119,7 +130,19 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4double North_EndCap_Window_Radius = 50.8 * mm;
   G4double North_EndCap_Window_Thickness = 0.6 * mm;
   G4double North_To_Window_Distance = 6.8 * mm; //distance to active region
-  logicNorth = addCylinder("North", 0 * mm, North_Radius, North_Thickness / 2, germanium, North_Center_Position, Northrot, G4Color::Red());
+  G4VSolid* solidNorth_Full
+	  = new G4Tubs("solidNorth_Full", 0 * mm, North_Radius, North_Thickness / 2, 0. * deg, 360. * deg);
+  G4VSolid* solidNorth_Hole
+	  = new G4Tubs("solidNorth_Hole", 0. * mm, 15. / 2. * mm, North_Thickness / 2, 0. * deg, 360. * deg);
+  G4SubtractionSolid* solidNorth
+	  = new G4SubtractionSolid("solidNorth", solidNorth_Full, solidNorth_Hole, 0, G4ThreeVector(0, 0, -20 * mm));
+  //logicNorth = addCylinder("North", 0 * mm, North_Radius, North_Thickness / 2, germanium, North_Center_Position, 0, G4Color::Red());
+  logicNorth
+	  = new G4LogicalVolume(solidNorth, germanium, "logicNorth");
+  physiNorth
+	  = new G4PVPlacement(Northrot, North_Center_Position, logicNorth, "physiNorth", logicWorld, false, 0, checkOverlaps);
+  logicNorth->SetVisAttributes(G4Color(1.0, 0.2, 0.0, 1.0));
+
   addCylinder("North_Dead_Layer", 0 * mm, North_Radius, North_Dead_Layer_Thickness / 2, germanium, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_Dead_Layer_Thickness / 2,0,0), Northrot, G4Color::Red());
   addCylinder("North_EndCap_Window", 0 * mm, North_EndCap_Window_Radius, North_EndCap_Window_Thickness / 2, carbon, North_Center_Position + G4ThreeVector(North_Thickness / 2 + North_To_Window_Distance,0,0), Northrot, G4Color(0.5, 0.5, 0.5, 0.5));
   addCylinder("North_Housing", North_EndCap_Window_Radius, North_EndCap_Window_Radius + 1 * mm, North_Thickness / 2 + North_To_Window_Distance, aluminum, North_Center_Position, Northrot, G4Color(0.5, 0.5, 0.5, 0.5));

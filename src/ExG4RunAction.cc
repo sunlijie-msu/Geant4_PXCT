@@ -99,7 +99,7 @@ ExG4RunAction::~ExG4RunAction()
 void ExG4RunAction::BeginOfRunAction(const G4Run*)
 {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  analysisManager->OpenFile("ExG4_152Eu_245keV_EMG.root");//output root file
+  analysisManager->OpenFile("ExG4_152Eu_1408keV.root");//output root file
   //ofstream outresultfile("out.txt",ios::out);//by run
   G4cout<<"5$ first in run, by run, ExG4RunAction::BeginOfRunAction(const G4Run*)"<<G4endl;
 }
