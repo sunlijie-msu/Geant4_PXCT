@@ -162,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 1.408 * CLHEP::MeV; // energy of the ejectile
+	Eejectile = 6.000 * CLHEP::MeV; // energy of the ejectile
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified
