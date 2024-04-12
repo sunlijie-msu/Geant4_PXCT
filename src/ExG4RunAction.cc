@@ -29,8 +29,8 @@ ExG4RunAction::ExG4RunAction()
   analysisManager->CreateH1("hMSD12_e","hMSD12_e",60000,0.,6000); // h1 ID=5//6000 is range, in what unit is defined in FillH1
   analysisManager->CreateH1("hMSD26_e","hMSD26_e",60000,0.,6000); // h1 ID=6//6000 is range, in what unit is defined in FillH1
   analysisManager->CreateH1("hLEGe_e","hLEGe_e",20000,0.,2000); // h1 ID=7//20000 is range, in what unit is defined in FillH1
-  analysisManager->CreateH1("hNorth_e","hNorth_e",60000,0.,6000); // h1 ID=8//60000 is range, in what unit is defined in FillH1
-  analysisManager->CreateH1("hSouth_e","hSouth_e",60000,0.,6000); // h1 ID=9//60000 is range, in what unit is defined in FillH1
+  analysisManager->CreateH1("hNorth_e","hNorth_e",80000,0.,8000); // h1 ID=8//60000 is range, in what unit is defined in FillH1
+  analysisManager->CreateH1("hSouth_e","hSouth_e",80000,0.,8000); // h1 ID=9//60000 is range, in what unit is defined in FillH1
 
   analysisManager->CreateH2("h2_MSD12_xy","h2_MSD12_xy",80,80.,120.,80,80.,120.); // h2 ID = 0
   analysisManager->CreateH2("h2_MSD26_xy","h2_MSD26_xy",80,80.,120.,80,80.,120.); // h2 ID = 1
@@ -99,7 +99,7 @@ ExG4RunAction::~ExG4RunAction()
 void ExG4RunAction::BeginOfRunAction(const G4Run*)
 {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  analysisManager->OpenFile("ExG4_HighEnergy_6000keV.root");//output root file
+  analysisManager->OpenFile("ExG4_HighEnergy_7000keV.root");//output root file
   //ofstream outresultfile("out.txt",ios::out);//by run
   G4cout<<"5$ first in run, by run, ExG4RunAction::BeginOfRunAction(const G4Run*)"<<G4endl;
 }
