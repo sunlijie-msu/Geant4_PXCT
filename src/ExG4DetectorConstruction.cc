@@ -86,7 +86,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4ThreeVector LEGe_Center_Position(0, 0, -21.82 * mm); // 10.97+5.6+10.5/2=21.82
   G4double LEGe_Thickness = 10.5*mm;
   G4double LEGe_Radius = 12.5 * mm; 
-  G4double LEGe_Dead_Layer_Thickness = 5.0*um;
+  G4double LEGe_Dead_Layer_Thickness = 5.0*um; // guess
   G4double LEGE_EndCap_Window_Radius = 18.9*mm;
   G4double LEGe_EndCap_Window_Thickness = 0.13*mm;
   G4double LEGe_To_Window_Distance = 5.6*mm;//distance to active region
@@ -99,14 +99,14 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4ThreeVector South_Center_Position(0, 0, 191.7 * mm); // 139.7+12+80.0/2=191.7
   G4double South_Thickness = 80.0 * mm;
   G4double South_Radius = 39.9 * mm;
-  G4double South_Dead_Layer_Thickness = 5.0* um;
+  G4double South_Dead_Layer_Thickness = 5.0* um; // guess
   G4double South_EndCap_Window_Radius = 50.8 * mm;
   G4double South_EndCap_Window_Thickness = 0.6 * mm;
   G4double South_To_Window_Distance = 6.3 * mm;//distance to active region
   G4VSolid* solidSouth_Full
 	  = new G4Tubs("solidSouth_Full", 0 * mm, South_Radius, South_Thickness / 2, 0. * deg, 360. * deg);
   G4VSolid* solidSouth_Hole
-	  = new G4Tubs("solidSouth_Hole", 0. * mm, 15. / 2. * mm, South_Thickness / 2, 0. * deg, 360. * deg);
+	  = new G4Tubs("solidSouth_Hole", 0. * mm, 15. / 2. * mm, South_Thickness / 2, 0. * deg, 360. * deg); // guess
   G4SubtractionSolid* solidSouth
 	  = new G4SubtractionSolid("solidSouth", solidSouth_Full, solidSouth_Hole, 0, G4ThreeVector(0, 0, 20 * mm));
   //logicSouth = addCylinder("South", 0 * mm, South_Radius, South_Thickness / 2, germanium, South_Center_Position, 0, G4Color::Blue());
@@ -126,14 +126,14 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4ThreeVector North_Center_Position(-184.3 * mm, 0, 0); // 139.7+12+65.2/2=184.3
   G4double North_Thickness = 65.2 * mm;
   G4double North_Radius = 42.4 * mm;
-  G4double North_Dead_Layer_Thickness = 5.0 * um;
+  G4double North_Dead_Layer_Thickness = 5.0 * um; // guess
   G4double North_EndCap_Window_Radius = 50.8 * mm;
   G4double North_EndCap_Window_Thickness = 0.6 * mm;
   G4double North_To_Window_Distance = 6.8 * mm; //distance to active region
   G4VSolid* solidNorth_Full
 	  = new G4Tubs("solidNorth_Full", 0 * mm, North_Radius, North_Thickness / 2, 0. * deg, 360. * deg);
   G4VSolid* solidNorth_Hole
-	  = new G4Tubs("solidNorth_Hole", 0. * mm, 15. / 2. * mm, North_Thickness / 2, 0. * deg, 360. * deg);
+	  = new G4Tubs("solidNorth_Hole", 0. * mm, 15. / 2. * mm, North_Thickness / 2, 0. * deg, 360. * deg); // guess
   G4SubtractionSolid* solidNorth
 	  = new G4SubtractionSolid("solidNorth", solidNorth_Full, solidNorth_Hole, 0, G4ThreeVector(0, 0, -20 * mm));
   //logicNorth = addCylinder("North", 0 * mm, North_Radius, North_Thickness / 2, germanium, North_Center_Position, 0, G4Color::Red());
@@ -150,7 +150,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   //  target
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
   Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 90 degrees
-  G4double target_thickness = 0.01*mm;
+  G4double target_thickness = 0.060*mm; // 152Eu Z2707 polyester tape thickness 60 um
   addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White());
 
   //Chamber

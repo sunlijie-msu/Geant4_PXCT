@@ -96,6 +96,12 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
   EMG_South_Tau_p1 = 0.0001547217;
   EMG_South_Tau_p0 = 0.1230884788;
 
+  EMG_LEGe_Sigma_p1 = 0.0014650;
+  EMG_LEGe_Sigma_p0 = 0.0952743;
+  EMG_LEGe_Tau_p1 = 0.0;
+  EMG_LEGe_Tau_p0 = 0.048;
+
+
   if (dHC1)//For MSD12
   {
 	  G4int n_hits = dHC1->entries();//MSD12SD hit 数
@@ -234,7 +240,7 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 	  memset(t, 0, sizeof(t));//time stamp of each step point
 	  for (G4int i = 0; i < n_hits; i++)//Within this loop, the histo are filled by hit, so the number can be much larger than the event number, the nt can only be filled by event (the last hit)
 	  {
-		  if (i > 0) break; //using this statement to extract the first hit for position check, the energy would be incomplete cuz only the first hit was recorded.
+		  //if (i > 0) break; //using this statement to extract the first hit for position check, the energy would be incomplete cuz only the first hit was recorded.
 		  ExG4Hit* hit = (*dHC3)[i];//fHitsCollection中第i个hit的信息，有时一个event就产生1个hit，但打出次级粒子会有多个hit
 		  // hit->Print();
 		  tof = hit->GetTof();
@@ -268,15 +274,23 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 	  }
 	  //Outside the loop, the nt are filled by event, so the number of "nt>0" is exactly the event number!
 	  analysisManager->FillNtupleIColumn(12, dHC3->entries());//nt ID=12
-	  // 	  if(totalEmE>0.001*CLHEP::MeV)
-	  // 	  {
-	  // 		  G4double Etemp=totalEmE;
-	  // 		  //totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355/1000000.0);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE*1000.0<<" keV"<<G4endl;
-	  // 		  totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355*CLHEP::eV);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE/CLHEP::keV<<" keV"<<G4endl;
-	  // 	  }
-			//excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  if (totalEmE > 0.5 * CLHEP::keV)// if you comment this part out, the EMG effect will be disabled.
+	  {
+		  EMG_LEGe_Sigma = EMG_LEGe_Sigma_p1 * totalEmE * 1000 + EMG_LEGe_Sigma_p0;
+		  EMG_LEGe_Tau = EMG_LEGe_Tau_p1 * totalEmE * 1000 + EMG_LEGe_Tau_p0;
+		  //G4cout<<"totalEmHit=	"<<totalEmHit<<"	totalEmE=	"<<totalEmE/CLHEP::keV<<"	EMG_LEGe_Sigma=	"<<EMG_LEGe_Sigma<<"	EMG_LEGe_Tau=	"<<EMG_LEGe_Tau<<G4endl;
+		  EMGf2->SetParameter(0, 1.);//N
+		  EMGf2->SetParameter(1, EMG_LEGe_Tau);//τ
+		  EMGf2->SetParameter(2, totalEmE * 1000);//μ
+		  EMGf2->SetParameter(3, EMG_LEGe_Sigma);//σ
+		  totalEmE = EMGf2->GetX(G4RandFlat::shoot(0.0, 1.0), 0, 10000) / 1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
+		  //totalEmE = EMGf2->GetX(G4UniformRand(), 0,10000)/1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
+		  // Without "/1000.0", it puts the value in units of keV in a variable in units of MeV, which is wrong.
+		  //G4double Etemp=totalEmE;
+		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(μ,σ)
+	  }
+	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+
 	  analysisManager->FillH1(7, totalEmE / CLHEP::keV);//h1 ID=7. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(13, totalEmE / CLHEP::keV);//nt ID=13
 	  analysisManager->FillNtupleDColumn(17, t[0]);//nt ID=17
@@ -330,7 +344,7 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(μ,σ)
 	  }
 	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
-	 analysisManager->FillH1(8, totalEmE / CLHEP::keV);//h1 ID=8. Fill histogram using the values in units of keV. Don't change. 
+	  analysisManager->FillH1(8, totalEmE / CLHEP::keV);//h1 ID=8. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(19, totalEmE / CLHEP::keV);//nt ID=19
 	  analysisManager->FillNtupleDColumn(23, tof);//nt ID=23
   }

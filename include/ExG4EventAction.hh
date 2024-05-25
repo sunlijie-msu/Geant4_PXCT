@@ -64,6 +64,7 @@ private:
 	G4int fDHC5ID;
 	G4double EMG_North_Sigma, EMG_North_Sigma_p0, EMG_North_Sigma_p1, EMG_North_Tau, EMG_North_Tau_p0, EMG_North_Tau_p1;
 	G4double EMG_South_Sigma, EMG_South_Sigma_p0, EMG_South_Sigma_p1, EMG_South_Tau, EMG_South_Tau_p0, EMG_South_Tau_p1;
+	G4double EMG_LEGe_Sigma, EMG_LEGe_Sigma_p0, EMG_LEGe_Sigma_p1, EMG_LEGe_Tau, EMG_LEGe_Tau_p0, EMG_LEGe_Tau_p1;
 	G4double ih = -1, jh = -1;  //which strip is hit
 	G4double eDep;
 	G4double tof = -999;

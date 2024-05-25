@@ -39,7 +39,7 @@ ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 	// 	xygaus->SetParameters(1,0,3,0,3); // amplitude, mean_x, sigma_x, mean_y, sigma_y  in units of mm. // 2D Gaussian beam spot
 	// 	xygaus->SetNpx(200);  // 2D Gaussian beam spot
 	// 	xygaus->SetNpy(200);  // 2D Gaussian beam spot
-	Rmax = 1 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm)
+	Rmax = 1.5 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm) R=1.5mm for 152Eu Z2707
 	tiltAngle = 45. * CLHEP::deg; // Tilt angle of 45 degrees
 	cosAngle = cos(tiltAngle);
 	sinAngle = sin(tiltAngle);
@@ -117,8 +117,8 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	//G4cout<<"(1)$ before event, by event, ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)"<<G4endl;
 	gRandom->SetSeed(0);
 	//	xygaus->GetRandom2(x0,y0); // 2D Gaussian beam spot  // Return two random numbers to x0 and y0 following this function shape.
-	r_beam = sqrt(gRandom->Uniform(0, 1)) * Rmax;  // 2D Uniform beam spot
-	theta_beam = gRandom->Uniform(0, 2. * 3.14159);  // 2D Uniform beam spot
+	r_beam = sqrt(gRandom->Uniform(0, 1.)) * Rmax;  // 2D Uniform beam spot. Don't change.
+	theta_beam = gRandom->Uniform(0, 2. * 3.14159);  // 2D Uniform beam spot. Don't change.
 	x0 = r_beam * cos(theta_beam);  // 2D Uniform beam spot
 	y0 = r_beam * sin(theta_beam);  // 2D Uniform beam spot
 	//depth_3He = (TH1F*)pFile->Get("depth");//Get("depth");//read implantation depth from root for 3He-implanted gold target
@@ -162,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 7.000 * CLHEP::MeV; // energy of the ejectile
+	Eejectile = 0.0086 * CLHEP::MeV; // energy of the ejectile
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified

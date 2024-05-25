@@ -13,12 +13,14 @@ cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 Location on my laptop:
 VMware Ubuntu can also use these files.
 
-cdp
+gopxct
 cd /home/sun/app/PXCT-build
 
 1) cmp
 cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/HPGE_PXCT
 
 2) make
+#mv tele tele5000
 
 3) ./tele vis
+#./LowEnergy_5keV.sh
