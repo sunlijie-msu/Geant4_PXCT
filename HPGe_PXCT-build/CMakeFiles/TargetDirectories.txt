@@ -1,0 +1,3 @@
+/home/sun/app/HPGe_PXCT-build/CMakeFiles/rebuild_cache.dir
+/home/sun/app/HPGe_PXCT-build/CMakeFiles/edit_cache.dir
+/home/sun/app/HPGe_PXCT-build/CMakeFiles/tele.dir
