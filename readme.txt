@@ -24,3 +24,6 @@ cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgf
 
 3) ./tele vis
 #./LowEnergy_5keV.sh
+
+tele is configured according to different source geometry
+sh are common scripts for all sources. They may need some global replacements.

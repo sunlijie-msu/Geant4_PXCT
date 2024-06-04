@@ -81,7 +81,7 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 
   //EMG response function
   TF1* EMGf1 = new TF1("EMGf1", "[0]*[3]/[1]*1.253314137*TMath::Exp(0.5*([3]*[3]/[1]/[1])+(x-[2])/[1])*TMath::Erfc(1/1.41421356*([3]/[1]+(x-[2])/[3]))", 0, 10000);//Glassman_PRC2019
-  EMGf1->SetNpx(100000);//Set the number of points used to draw the function. [0]-N, [1]-τ, [2]-μ, [3]-σ,
+  EMGf1->SetNpx(100000);//Set the number of points used to draw the function. [0]-N, [1]-tau, [2]-mu, [3]-sigma,
   // normalized cumulative Probability Density Function
   TF1* EMGf2 = new TF1("EMGf2", "[0]/2*(TMath::Exp((0.5*[3]*[3]-[1]*[2]+[1]*x)/([1]*[1]))*TMath::Erfc(1/1.41421356*([3]/[1]+(x-[2])/[3]))-TMath::Erfc((x-[2])/(1.41421356*[3])))+1", 0, 10000);//Glassman_PRC2019
   EMGf2->SetNpx(100000);//Set the number of points used to draw the function.
@@ -150,15 +150,15 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 	  }
 	  //Outside the loop, the nt are filled by event, so the number of "nt>0" is exactly the event number!, you cannot use if(n>0)Fillnt; here, it's useless.
 	  analysisManager->FillNtupleIColumn(0, dHC1->entries());//nt ID=0 filled by event
-	  // 	  if(totalEmE>0.001*CLHEP::MeV)
-	  // 	  {
-	  // 		  G4double Etemp=totalEmE;
-	  // 		  //totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355/1000000.0);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE*1000.0<<" keV"<<G4endl;
-	  // 		  totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355*CLHEP::eV);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE/CLHEP::keV<<" keV"<<G4endl;
-	  // 	  }
-			//excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
+	  if(totalEmE>0.0005*CLHEP::MeV)
+	  {
+		  G4double Etemp = totalEmE;
+		  G4double resolution = 0.0090; // 0.95% for the sum peak of telescope, based on 241Am source measurement. 0.90% can be adopted as the MSD12 resolution.
+		  G4double fwhm = resolution * Etemp;
+		  G4double sigma = fwhm / 2.355;
+		  totalEmE = G4RandGauss::shoot(Etemp, sigma); // G4RandGauss::shoot(mu,sigma)
+	  }
+		//excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 	  analysisManager->FillH1(5, totalEmE / CLHEP::keV);//h1 ID=5 filled by event. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(1, totalEmE / CLHEP::keV);//nt ID=1 filled by event
 	  analysisManager->FillNtupleDColumn(5, t[0]);//nt ID=5 filled by event
@@ -212,14 +212,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 	  }
 	  //Outside the loop, the nt are filled by event, so the number of "nt>0" is exactly the event number!
 	  analysisManager->FillNtupleIColumn(6, dHC2->entries());//nt ID=6
-	  // 	  if(totalEmE>0.001*CLHEP::MeV)
-	  // 	  {
-	  // 		  G4double Etemp=totalEmE;
-	  // 		  //totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355/1000000.0);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE*1000.0<<" keV"<<G4endl;
-	  // 		  totalEmE=G4RandGauss::shoot(Etemp,250.0/2.355*CLHEP::eV);//G4RandGauss::shoot(μ,σ)
-	  // 		  //G4cout<<"Energy_Target=	"<<totalEmE/CLHEP::keV<<" keV"<<G4endl;
-	  // 	  }
+	  if (totalEmE > 0.0005 * CLHEP::MeV)
+	  {
+		  G4double Etemp = totalEmE;
+		  G4double resolution = 0.0031; // 0.31% for MSD26 based on 241Am source measurement.
+		  G4double fwhm = resolution * Etemp;
+		  G4double sigma = fwhm / 2.355;
+		  totalEmE = G4RandGauss::shoot(Etemp, sigma); // G4RandGauss::shoot(mu,sigma)
+	  }
 			//excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 	  analysisManager->FillH1(6, totalEmE / CLHEP::keV);//h1 ID=6. Fill histogram using the values in units of keV. Don't change. 
 	  analysisManager->FillNtupleDColumn(7, totalEmE / CLHEP::keV);//nt ID=7
@@ -280,14 +280,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 		  EMG_LEGe_Tau = EMG_LEGe_Tau_p1 * totalEmE * 1000 + EMG_LEGe_Tau_p0;
 		  //G4cout<<"totalEmHit=	"<<totalEmHit<<"	totalEmE=	"<<totalEmE/CLHEP::keV<<"	EMG_LEGe_Sigma=	"<<EMG_LEGe_Sigma<<"	EMG_LEGe_Tau=	"<<EMG_LEGe_Tau<<G4endl;
 		  EMGf2->SetParameter(0, 1.);//N
-		  EMGf2->SetParameter(1, EMG_LEGe_Tau);//τ
-		  EMGf2->SetParameter(2, totalEmE * 1000);//μ
-		  EMGf2->SetParameter(3, EMG_LEGe_Sigma);//σ
+		  EMGf2->SetParameter(1, EMG_LEGe_Tau);//tau
+		  EMGf2->SetParameter(2, totalEmE * 1000);//mu
+		  EMGf2->SetParameter(3, EMG_LEGe_Sigma);//sigma
 		  totalEmE = EMGf2->GetX(G4RandFlat::shoot(0.0, 1.0), 0, 10000) / 1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  //totalEmE = EMGf2->GetX(G4UniformRand(), 0,10000)/1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  // Without "/1000.0", it puts the value in units of keV in a variable in units of MeV, which is wrong.
 		  //G4double Etemp=totalEmE;
-		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(μ,σ)
+		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(mu,sigma)
 	  }
 	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 
@@ -334,14 +334,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 		  EMG_North_Tau = EMG_North_Tau_p1 * totalEmE * 1000 + EMG_North_Tau_p0;
 		  //G4cout<<"totalEmHit=	"<<totalEmHit<<"	totalEmE=	"<<totalEmE/CLHEP::keV<<"	EMG_North_Sigma=	"<<EMG_North_Sigma<<"	EMG_North_Tau=	"<<EMG_North_Tau<<G4endl;
 		  EMGf2->SetParameter(0, 1.);//N
-		  EMGf2->SetParameter(1, EMG_North_Tau);//τ
-		  EMGf2->SetParameter(2, totalEmE * 1000);//μ
-		  EMGf2->SetParameter(3, EMG_North_Sigma);//σ
+		  EMGf2->SetParameter(1, EMG_North_Tau);//tau
+		  EMGf2->SetParameter(2, totalEmE * 1000);//mu
+		  EMGf2->SetParameter(3, EMG_North_Sigma);//sigma
 		  totalEmE = EMGf2->GetX(G4RandFlat::shoot(0.0, 1.0), 0, 10000) / 1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  //totalEmE = EMGf2->GetX(G4UniformRand(), 0,10000)/1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  // Without "/1000.0", it puts the value in units of keV in a variable in units of MeV, which is wrong.
 		  //G4double Etemp=totalEmE;
-		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(μ,σ)
+		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(mu,sigma)
 	  }
 	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 	  analysisManager->FillH1(8, totalEmE / CLHEP::keV);//h1 ID=8. Fill histogram using the values in units of keV. Don't change. 
@@ -387,14 +387,14 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
 		  EMG_South_Tau = EMG_South_Tau_p1 * totalEmE * 1000 + EMG_South_Tau_p0;
 		  //G4cout<<"totalEmHit=	"<<totalEmHit<<"	totalEmE=	"<<totalEmE/CLHEP::keV<<"	EMG_South_Sigma=	"<<EMG_South_Sigma<<"	EMG_South_Tau=	"<<EMG_South_Tau<<G4endl;
 		  EMGf2->SetParameter(0, 1.);//N
-		  EMGf2->SetParameter(1, EMG_South_Tau);//τ
-		  EMGf2->SetParameter(2, totalEmE * 1000);//μ
-		  EMGf2->SetParameter(3, EMG_South_Sigma);//σ
+		  EMGf2->SetParameter(1, EMG_South_Tau);//tau
+		  EMGf2->SetParameter(2, totalEmE * 1000);//mu
+		  EMGf2->SetParameter(3, EMG_South_Sigma);//sigma
 		  totalEmE = EMGf2->GetX(G4RandFlat::shoot(0.0, 1.0), 0, 10000) / 1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  //totalEmE = EMGf2->GetX(G4UniformRand(), 0,10000)/1000.0;//After this, totalEmE is the experimentally detected gamma energy in default units of MeV
 		  // Without "/1000.0", it puts the value in units of keV in a variable in units of MeV, which is wrong.
 		  //G4double Etemp=totalEmE;
-		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(μ,σ)
+		  //totalEmE=G4RandGauss::shoot(Etemp,TargetReso*Etemp);//G4RandGauss::shoot(mu,sigma)
 	  }
 	  //excitE width should be added in PrimaryGeneratorAction.cc, while detector resolution should be added in EventAction.cc
 	  analysisManager->FillH1(9, totalEmE / CLHEP::keV);//h1 ID=9. Fill histogram using the values in units of keV. Don't change. 
