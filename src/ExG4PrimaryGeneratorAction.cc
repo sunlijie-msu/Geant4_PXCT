@@ -39,7 +39,7 @@ ExG4PrimaryGeneratorAction::ExG4PrimaryGeneratorAction()
 	// 	xygaus->SetParameters(1,0,3,0,3); // amplitude, mean_x, sigma_x, mean_y, sigma_y  in units of mm. // 2D Gaussian beam spot
 	// 	xygaus->SetNpx(200);  // 2D Gaussian beam spot
 	// 	xygaus->SetNpy(200);  // 2D Gaussian beam spot
-	Rmax = 1.6 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm) R=1.5mm for 152Eu Z2707
+	Rmax = 1.6 * CLHEP::mm;  // 2D Uniform beam spot // in units of mm. G4ThreeVector(mm) Rmax = 1.5 mm for 152Eu Z2707; Rmax = 1.6 mm for 251Am Z7117 Modify
 	tiltAngle = 45. * CLHEP::deg; // Tilt angle of 45 degrees
 	cosAngle = cos(tiltAngle);
 	sinAngle = sin(tiltAngle);
@@ -131,10 +131,10 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	double y0_tilted = y0; // y-coordinate remains unchanged
 	double z0_tilted = -x0 * sinAngle + z0 * cosAngle;
 
-	// Update x0, y0, z0 with the tilted coordinates
-	x0 = x0_tilted;
-	y0 = y0_tilted;
-	z0 = z0_tilted;
+	// Update x0, y0, z0 with the tilted coordinates. Comment out the following line if no rotation is needed. Modify
+// 	x0 = x0_tilted;
+// 	y0 = y0_tilted;
+// 	z0 = z0_tilted;
 
 	// Now x0, y0, z0 are the coordinates of the source distribution tilted by 45 degrees
 
@@ -162,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 0.045 * CLHEP::MeV; // modify energy of the ejectile 
+	Eejectile = 0.0111 * CLHEP::MeV; // modify energy of the ejectile 
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified

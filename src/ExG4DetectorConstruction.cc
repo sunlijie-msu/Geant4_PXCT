@@ -151,7 +151,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
   Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 45 degrees
   G4double target_thickness = 0.120*mm; // 152Eu Z2707 polyester tape thickness 60 um on both sides
-  addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White()); // comment out if 152Eu source is not needed
+  //addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White()); // comment out if 152Eu source is not needed. Modify
 
 
 //   G4RotationMatrix* Rot = new G4RotationMatrix; // Rotates X and Z axes only
