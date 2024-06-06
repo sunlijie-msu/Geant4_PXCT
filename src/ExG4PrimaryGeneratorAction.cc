@@ -131,7 +131,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	double y0_tilted = y0; // y-coordinate remains unchanged
 	double z0_tilted = -x0 * sinAngle + z0 * cosAngle;
 
-	// Update x0, y0, z0 with the tilted coordinates. Comment out the following line if no rotation is needed. Modify
+	// Update x0, y0, z0 with the tilted coordinates. 152Eu source is tilted. Comment out the following lines if 241Am source is used. Modify
 // 	x0 = x0_tilted;
 // 	y0 = y0_tilted;
 // 	z0 = z0_tilted;
@@ -162,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 0.0111 * CLHEP::MeV; // modify energy of the ejectile 
+	Eejectile = 0.055 * CLHEP::MeV; // modify energy of the ejectile 
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified

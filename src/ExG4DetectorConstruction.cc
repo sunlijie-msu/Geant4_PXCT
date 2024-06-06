@@ -86,7 +86,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4ThreeVector LEGe_Center_Position(0, 0, -21.82 * mm); // 10.97+5.6+10.5/2=21.82
   G4double LEGe_Thickness = 10.5*mm;
   G4double LEGe_Radius = 12.5 * mm; 
-  G4double LEGe_Dead_Layer_Thickness = 7.5*um; // seems to reproduce the 152Eu X peaks well
+  G4double LEGe_Dead_Layer_Thickness = 7.5*um; // guess
   G4double LEGE_EndCap_Window_Radius = 18.9*mm;
   G4double LEGe_EndCap_Window_Thickness = 0.13*mm;
   G4double LEGe_To_Window_Distance = 5.6*mm;//distance to active region
@@ -151,7 +151,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
   Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 45 degrees
   G4double target_thickness = 0.120*mm; // 152Eu Z2707 polyester tape thickness 60 um on both sides
-  //addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White()); // comment out if 152Eu source is not needed. Modify
+  //addCylinder("target", 0*mm,7*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White()); // comment out if 241Am Z7117 source is used. Modify
 
 
 //   G4RotationMatrix* Rot = new G4RotationMatrix; // Rotates X and Z axes only

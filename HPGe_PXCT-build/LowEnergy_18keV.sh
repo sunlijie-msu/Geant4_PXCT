@@ -4,10 +4,10 @@ num2=5
  for((i=${num1};i<=${num2};i+=1));
  do
  echo Procesing file_No${i} ....
- ./tele18
- mv ExG4_LowEnergy_18keV.root ExG4_LowEnergy_18keV_No${i}.root
- mv ExG4_LowEnergy_18keV_No${i}.root /mnt/hgfs/out/
+ ./tele7.5um18
+ mv ExG4_241Am_7.5umWindow_LowEnergy_18keV.root ExG4_241Am_7.5umWindow_LowEnergy_18keV_No${i}.root
+ mv ExG4_241Am_7.5umWindow_LowEnergy_18keV_No${i}.root /mnt/hgfs/out/
  done
 cd /mnt/hgfs/out/
-rm -f ExG4_LowEnergy_18keV_all.root
-hadd ExG4_LowEnergy_18keV_all.root ExG4_LowEnergy_18keV_No*.root
+rm -f ExG4_241Am_7.5umWindow_LowEnergy_18keV_all.root
+hadd ExG4_241Am_7.5umWindow_LowEnergy_18keV_all.root ExG4_241Am_7.5umWindow_LowEnergy_18keV_No*.root
