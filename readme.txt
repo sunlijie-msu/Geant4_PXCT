@@ -20,10 +20,13 @@ cd /home/sun/app/PXCT-build
 cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/HPGE_PXCT
 
 2) make
-#mv tele tele5000
+#mv tele tele7um11.5
+for 11.5 keV X rays
 
 3) ./tele vis
-#./LowEnergy_5keV.sh
+./LowEnergy_11.5keV.sh
+or Run_All_LowEnergy.sh runs all sh files one-by-one.
+All generated root files are under /mnt/hgfs/out
 
 tele is configured according to different source geometry
 sh are common scripts for all sources. They may need some global replacements.
