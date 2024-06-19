@@ -404,4 +404,6 @@ void ExG4EventAction::EndOfEventAction(const G4Event *event)
   
   analysisManager->AddNtupleRow();//For all of the above dHC1+2+3+4, this statement can be written only once. Without this statement, all the branches in the tree are empty
   //G4cout<<"(4)$ last in event, by event, ExG4EventAction::EndOfEventAction(const G4Event* event)"<<G4endl;
+  delete EMGf1;
+  delete EMGf2;
 }
