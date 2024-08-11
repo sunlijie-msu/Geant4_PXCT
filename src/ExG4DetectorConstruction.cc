@@ -46,7 +46,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
 
   //  set up physical objects and detectors and things
   //MSD12 (delta E)
-  G4ThreeVector MSD12_Center_Position(0,0,11.242*mm);
+  G4ThreeVector MSD12_Center_Position(0,80,11.242*mm);
   G4double MSD12_Thickness = 0.01165*mm; // MSD12 active thickness 11.65 um
   G4double MSD12_Radius = 6*mm;
   G4double MSD12_Front_Window_Thickness = 0.000050*mm;//window thickness 0.05 um
@@ -86,7 +86,7 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
   G4ThreeVector LEGe_Center_Position(0, 0, -21.82 * mm); // 10.97+5.6+10.5/2=21.82
   G4double LEGe_Thickness = 10.5*mm;
   G4double LEGe_Radius = 12.5 * mm; 
-  G4double LEGe_Dead_Layer_Thickness = 7.0*um; // guess
+  G4double LEGe_Dead_Layer_Thickness = 7.0*um; // best guess
   G4double LEGE_EndCap_Window_Radius = 18.9*mm;
   G4double LEGe_EndCap_Window_Thickness = 0.13*mm;
   G4double LEGe_To_Window_Distance = 5.6*mm;//distance to active region
@@ -149,8 +149,9 @@ G4VPhysicalVolume* ExG4DetectorConstruction::Construct()
 
   //  target
   G4RotationMatrix* Rot_target = new G4RotationMatrix; // Rotates X and Z axes only
-  Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 45 degrees
-  G4double target_thickness = 0.120*mm; // 152Eu Z2707 polyester tape thickness 60 um on both sides
+  //Rot_target -> rotateY(-M_PI/4.*rad); // Rotates 45 degrees
+  Rot_target -> rotateY(0.*rad); // Rotates 0 degrees
+  G4double target_thickness = 0.0120*mm; // 152Eu Z2707 polyester tape thickness 60 um on both sides
   addCylinder("target", 0*mm,10*mm, target_thickness/2, mylar, G4ThreeVector(0,0,0), Rot_target, G4Color::White()); // 10*mm size of target doesn't matter. // comment out if 241Am Z7117 source is used. Modify
 
 

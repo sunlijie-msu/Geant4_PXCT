@@ -132,9 +132,9 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	double z0_tilted = -x0 * sinAngle + z0 * cosAngle;
 
 	// Update x0, y0, z0 with the tilted coordinates. 152Eu source is tilted. Comment out the following lines if 241Am source is used. Modify
- 	x0 = x0_tilted;
- 	y0 = y0_tilted;
- 	z0 = z0_tilted;
+//  	x0 = x0_tilted;
+//  	y0 = y0_tilted;
+//  	z0 = z0_tilted;
 
 	// Now x0, y0, z0 are the coordinates of the source distribution tilted by 45 degrees
 
@@ -162,7 +162,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	dirx = sintheta_p1 * cos(phi_p1);//isotropy
 	diry = sintheta_p1 * sin(phi_p1);//isotropy
 	dirz = costheta_p1;//isotropy
-	Eejectile = 0.020 * CLHEP::MeV; // modify energy of the ejectile 
+	Eejectile = 0.030 * CLHEP::MeV; // modify energy of the ejectile 
 	//calculate Eejectile from selected theta_p1, here it should be "+" sign before sqrt
 	//Eejectile = (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue)) * (sqrt(Abeam * Aejectile * Ebeam) / (Arecoil + Aejectile) * costheta_p1 + sqrt(((Arecoil - Abeam) / (Arecoil + Aejectile) + Abeam * Aejectile / ((Arecoil + Aejectile) * (Arecoil + Aejectile)) * (costheta_p1 * costheta_p1)) * Ebeam + Arecoil / (Arecoil + Aejectile) * Qvalue));
 	//G4cout<<"++++++++++++  Ealpha=	"<<Eejectile/CLHEP::MeV<<"	MeV	theta_p1=	"<<theta_p1/CLHEP::deg<<"	deg"<<G4endl; // formula verified
@@ -173,7 +173,7 @@ void ExG4PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 	//position=G4ThreeVector(0.*CLHEP::mm,0.*CLHEP::mm,0*CLHEP::mm);// point source, usually for check, validation and test
 	momentumDirection = G4ThreeVector(dirx, diry, dirz);//isotropy
 	//momentumDirection = G4ThreeVector(-1,0,0);//(0,0,+1) unidirectional toward Z+ axis, usually for check, validation and test
-	fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("gamma"));
+	fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("e-"));
 	fParticleGun->SetParticleEnergy(Eejectile);
 	fParticleGun->SetParticlePosition(position);
 	fParticleGun->SetParticleMomentumDirection(momentumDirection);
