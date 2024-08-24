@@ -133,7 +133,7 @@ void PhysListEmStandard::ConstructProcess()
 
       ph->RegisterProcess(new G4hMultipleScattering(), particle);      
       G4hIonisation* hIoni = new G4hIonisation();
-      hIoni->SetStepFunction(0.1, 10*um);
+      hIoni->SetStepFunction(0.1, 1*um);
       ph->RegisterProcess(hIoni, particle);
       ph->RegisterProcess(new G4hBremsstrahlung(), particle);
       ph->RegisterProcess(new G4hPairProduction(), particle);            
@@ -143,7 +143,7 @@ void PhysListEmStandard::ConstructProcess()
 
       ph->RegisterProcess(new G4hMultipleScattering(), particle);           
       G4ionIonisation* ionIoni = new G4ionIonisation();
-      ionIoni->SetStepFunction(0.1, 10*um);
+      ionIoni->SetStepFunction(0.1, 1*um);
       ph->RegisterProcess(ionIoni, particle);
       ph->RegisterProcess(new G4NuclearStopping(), particle);      
             

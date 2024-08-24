@@ -13,11 +13,13 @@ cd /mnt/simulations/pxct/lijie/PXCT_Sim/build
 Location on my laptop:
 VMware Ubuntu can also use these files.
 
-gopxct
+gopxcta
 cd /home/sun/app/PXCT-build
 
 1) cmp
-cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/HPGE_PXCT
+cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/Geant4_PXCT
+cma
+cmake -DGeant4_DIR=/home/sun/app/geant4.10.02-install/lib/Geant4-10.2.3 /mnt/hgfs/PXCT_Adams/
 
 2) make
 #mv tele tele7um11.5

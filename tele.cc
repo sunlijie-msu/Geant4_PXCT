@@ -46,7 +46,12 @@ int main(int argc,char** argv)
   //===================================BeamOn==================================//
   if(argc==1) {
     for(int runid=0;runid<1;runid++) {
-      runManager->BeamOn(100000);//
+      double beam_rate = 9000;//3.01e4; //pps
+      double angular_multiplier = .08066;//solid angle covered by 33 deg half angle cone divided by 4 pi (in this case sin^2(33 degrees/2))
+      double charged_particle_branch = 0.016;
+      double duration = 5*24*3600;
+      //runManager->BeamOn((int)(beam_rate*duration*charged_particle_branch*angular_multiplier));
+	  runManager->BeamOn(30000);
     }
   } else {
     G4String fileName=argv[1];
